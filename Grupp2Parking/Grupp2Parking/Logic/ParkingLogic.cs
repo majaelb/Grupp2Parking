@@ -52,5 +52,21 @@ namespace Grupp2Parking.Logic {
             }
             return affectedRow>0;
         }
+
+        internal static Car GetCar() {
+            throw new NotImplementedException();
+        }
+
+        internal static City GetCity() {
+            throw new NotImplementedException();
+        }
+
+        internal static ParkingHouse GetParkingHouse(City city) {
+            throw new NotImplementedException();
+        }
+
+        internal static ParkingSlot GetParkingSlot(ParkingHouse house) {
+            throw new NotImplementedException();
+        }
     }
 }
