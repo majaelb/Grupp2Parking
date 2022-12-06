@@ -18,9 +18,9 @@ namespace Grupp2Parking
             bool runprogram = true;
             while (runprogram)
             {
-                Console.WriteLine("Tryck B för att lägga till en ny bil");
-                Console.WriteLine("Tryck S för att lägga till en ny stad");
-                Console.WriteLine("Tryck V för att visa alla städer");
+                Console.WriteLine("Tryck B för bilalternativ");
+                Console.WriteLine("Tryck S för stadalternativ");
+                Console.WriteLine("Tryck P för parkeringshusalternativ");
                 Console.WriteLine("Tryck A för att avsluta");
 
                 var key = Console.ReadKey(true);
@@ -28,17 +28,7 @@ namespace Grupp2Parking
                 switch (key.KeyChar)
                 {
                     case 'b':
-                        // Lägg till ny bil
-                        Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
-                        var newCar = new ParkingItems.Car
-                        {
-                            Plate = Console.ReadLine().ToUpper(),
-                            Make = Console.ReadLine(),
-                            Color = Console.ReadLine()
-                        };
-                        int rowsAffected1 = InsertCar(newCar);
-                        Console.WriteLine("Antal bilar tillagda: " + rowsAffected1);
-                        Console.WriteLine("----------------------------------------------");
+                        GUI.CarMenu();
                         break;
                     case 's':
                         // Lägg till ny stad
@@ -108,6 +98,17 @@ namespace Grupp2Parking
             }
             return cities;
 
+        }
+        public static List<ParkingItems.Car> GetAllCars()
+        {
+            var sql = "SELECT * FROM Cars";
+            var cars = new List<ParkingItems.Car>();
+
+            using (var connection = new SqlConnection(connString)) //Anslutning - Vi har bara tillgång till connection här inne:
+            {
+                cars = connection.Query<ParkingItems.Car>(sql).ToList();
+            }
+            return cars;
         }
     }
 }
