@@ -42,5 +42,15 @@ namespace Grupp2Parking.Logic {
 
             return affectedRows > 0;
         }
+        public static bool ParkCarAtGarage(ParkingItems.Car car) {
+            int affectedRow = 0;
+
+            string sql = $"UPDATE Cars SET ParkingSlotsId = {car.ParkingSlotsId} WHERE Id = {car.Id}";
+
+            using (var connection = new SqlConnection(connString)) {
+                affectedRow = connection.Execute(sql);
+            }
+            return affectedRow>0;
+        }
     }
 }

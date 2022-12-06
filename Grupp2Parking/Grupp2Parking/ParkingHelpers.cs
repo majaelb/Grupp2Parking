@@ -82,7 +82,7 @@ namespace Grupp2Parking
             var sql = "SELECT * FROM Cities";
             var cities = new List<ParkingItems.City>();
 
-            using (var connection = new SqlConnection(connString)) //Anslutning - Vi har bara tillgång till connection här inne:
+            using (var connection = new SqlConnection(connString))
             {
                 cities = connection.Query<ParkingItems.City>(sql).ToList();
             }
@@ -93,18 +93,18 @@ namespace Grupp2Parking
             var sql = "SELECT * FROM Cars";
             var cars = new List<ParkingItems.Car>();
 
-            using (var connection = new SqlConnection(connString)) //Anslutning - Vi har bara tillgång till connection här inne:
+            using (var connection = new SqlConnection(connString)) 
             {
                 cars = connection.Query<ParkingItems.Car>(sql).ToList();
             }
             return cars;
         }
-        public static int ParkCar(int carId, int spotId) {
+        public static int ParkCar(ParkingItems.Car car) {
             int affectedRow = 0;
 
-            string sql = $"UPDATE Cars SET ParkingSlotsId = {spotId} WHERE Id = {carId}";
+            string sql = $"UPDATE Cars SET ParkingSlotsId = {car.ParkingSlotsId} WHERE Id = {car.Id}";
 
-            using (var connection = new SqlConnection(connString)) {
+            using (var connection = new SqlConnection(connString)) { 
                 affectedRow = connection.Execute(sql);
             }
             return affectedRow;
