@@ -28,17 +28,6 @@ namespace Grupp2Parking
                 switch (key.KeyChar)
                 {
                     case 'b':
-                        // Lägg till ny bil
-                        Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
-                        var newCar = new ParkingItems.Car
-                        {
-                            Plate = Console.ReadLine().ToUpper(),
-                            Make = Console.ReadLine(),
-                            Color = Console.ReadLine()
-                        };
-                        int rowsAffected1 = InsertCar(newCar);
-                        Console.WriteLine("Antal bilar tillagda: " + rowsAffected1);
-                        Console.WriteLine("----------------------------------------------");
                         break;
                     case 's':
                
@@ -61,18 +50,18 @@ namespace Grupp2Parking
         }
 
 
-        public static int InsertCar(ParkingItems.Car car)
+        public static void InsertCar()
         {
-            int affectedRows = 0;
-
-            string sql = $"INSERT INTO Cars(Plate, Make, Color) VALUES('{car.Plate}', '{car.Make}', '{car.Color}')";
-
-            using (var connection = new SqlConnection(connString))
+            Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
+            var newCar = new ParkingItems.Car
             {
-                affectedRows = connection.Execute(sql);
-            }
-
-            return affectedRows;
+                Plate = Console.ReadLine().ToUpper(),
+                Make = Console.ReadLine(),
+                Color = Console.ReadLine()
+            };
+            bool success = ParkingLogic.AddCarToDatabase(newCar);
+            Console.WriteLine("Antal bilar tillagda: " + success);
+            Console.WriteLine("----------------------------------------------");
         }
 
         public static void InsertCity()

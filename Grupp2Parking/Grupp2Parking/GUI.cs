@@ -8,30 +8,20 @@ namespace Grupp2Parking
 {
     internal class GUI
     {
-        internal static void CarMenu()
+        internal static void MainMenu()
         {
             bool runProgram = true;
 
             while (runProgram)
             {
                 var key = Console.ReadKey(true).Key;
+                PrintMenuOptions();
 
-                Console.WriteLine("[L]ägg till bil");
-                Console.WriteLine("[P]arkera bil");
                 switch (key)
                 {
                     case ConsoleKey.L:
                         // Lägg till ny bil
-                        Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
-                        var newCar = new ParkingItems.Car
-                        {
-                            Plate = Console.ReadLine().ToUpper(),
-                            Make = Console.ReadLine(),
-                            Color = Console.ReadLine()
-                        };
-                        int rowsAffected1 = ParkingHelpers.InsertCar(newCar);
-                        Console.WriteLine("Antal bilar tillagda: " + rowsAffected1);
-                        Console.WriteLine("----------------------------------------------");
+                        
                         break;
 
                     case ConsoleKey.P:
@@ -47,6 +37,19 @@ namespace Grupp2Parking
             
             }
         }
+
+        private static void PrintMenuOptions()
+        {
+            Console.WriteLine("Välj funktion");
+            Console.WriteLine("====");
+            Console.WriteLine("[P]arkera");
+            Console.WriteLine("[A]vparkera");
+            Console.WriteLine("[L]ägga till");
+            Console.WriteLine("[V]isa detaljer");
+            Console.WriteLine("[A]vsluta");
+          //Console.WriteLine("A: Växla inmatningsläge för fordon (manuellt, automatiskt)");
+        }
+
         internal static void PrintParkingHouses(int CityId) {
 
         }
