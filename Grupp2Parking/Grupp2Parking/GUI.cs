@@ -26,6 +26,7 @@ namespace Grupp2Parking {
                     //Console.WriteLine("[V]isa detaljer");
                     //Console.WriteLine("[A]vsluta");
                     case ConsoleKey.P:
+                        //Bryt ut till en metod och placera någonstans?
                         var car = ParkingLogic.GetCar();
                         var city = ParkingLogic.GetCity();
                         var house = ParkingLogic.GetParkingHouse(city);
@@ -43,8 +44,7 @@ namespace Grupp2Parking {
                         Console.WriteLine("----------------------------------------------");
                         */
                         break;
-                    case ConsoleKey.A:
-                                       //Lista bilar med numrerat val?
+                    case ConsoleKey.A: //Lista bilar med numrerat val?
                                        //Val för söka bil baserat på regskylt?
                                        //Hämta bil från vald metod
                                        //Försök ta bort Bilen Från Databasen
@@ -52,9 +52,10 @@ namespace Grupp2Parking {
                     case ConsoleKey.L: //Visa Lista med "Saker" att Lägga till
                                        //Välj från listan och anropa rätt metod
                                        break;
-                    case ConsoleKey.V: 
+                    case ConsoleKey.V: //Visa Lista med alternativ att kolla djupare på
+                                       //Välj från listan och anropa rätt metod
                                        break;
-                    case ConsoleKey.Q: 
+                    case ConsoleKey.Q: runProgram = false;
                                        break;
                 }
 
@@ -77,7 +78,8 @@ namespace Grupp2Parking {
             Console.WriteLine("[L]ägga till (Stad/P-hus/Bil)");
             Console.WriteLine("[V]isa detaljer (Stad/P-hus)");
             Console.WriteLine("[A]vsluta");
-            //Console.WriteLine("A: Växla inmatningsläge för fordon (manuellt, automatiskt)");
+            //Console.WriteLine("W: Växla inmatningsläge för fordon (manuellt, automatiskt)");
+            //Console.WriteLine("+-: Växla stad");
         }
 
         /**
