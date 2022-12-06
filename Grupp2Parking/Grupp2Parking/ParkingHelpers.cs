@@ -12,15 +12,14 @@ namespace Grupp2Parking
     {
         static string connString = "data source=.\\SQLEXPRESS; initial catalog=Grupp2Parking; persist security info=True; Integrated Security=True";
 
-
         public static void ParkingMenu()
         {
             bool runprogram = true;
             while (runprogram)
             {
-                Console.WriteLine("Tryck B för bilalternativ");
-                Console.WriteLine("Tryck S för stadalternativ");
-                Console.WriteLine("Tryck P för parkeringshusalternativ");
+                Console.WriteLine("Tryck B för att lägga till en ny bil");
+                Console.WriteLine("Tryck S för att lägga till en ny stad");
+                Console.WriteLine("Tryck V för att visa alla städer");
                 Console.WriteLine("Tryck A för att avsluta");
 
                 var key = Console.ReadKey(true);
@@ -28,7 +27,17 @@ namespace Grupp2Parking
                 switch (key.KeyChar)
                 {
                     case 'b':
-                        GUI.CarMenu();
+                        // Lägg till ny bil
+                        Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
+                        var newCar = new ParkingItems.Car
+                        {
+                            Plate = Console.ReadLine().ToUpper(),
+                            Make = Console.ReadLine(),
+                            Color = Console.ReadLine()
+                        };
+                        int rowsAffected1 = InsertCar(newCar);
+                        Console.WriteLine("Antal bilar tillagda: " + rowsAffected1);
+                        Console.WriteLine("----------------------------------------------");
                         break;
                     case 's':
                         // Lägg till ny stad
@@ -99,8 +108,7 @@ namespace Grupp2Parking
             return cities;
 
         }
-        public static List<ParkingItems.Car> GetAllCars()
-        {
+        public static List<ParkingItems.Car> GetAllCars() {
             var sql = "SELECT * FROM Cars";
             var cars = new List<ParkingItems.Car>();
 
@@ -110,14 +118,12 @@ namespace Grupp2Parking
             }
             return cars;
         }
-        public static int ParkCar(int carId, int spotId)
-        {
+        public static int ParkCar(int carId, int spotId) {
             int affectedRow = 0;
 
             string sql = $"UPDATE Cars SET ParkingSlotsId = {spotId} WHERE Id = {carId}";
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 affectedRow = connection.Execute(sql);
             }
             return affectedRow;

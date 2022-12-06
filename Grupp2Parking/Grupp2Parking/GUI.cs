@@ -14,14 +14,13 @@ namespace Grupp2Parking
 
             while (runProgram)
             {
-                var key = Console.ReadKey(true);
+                var key = Console.ReadKey(true).Key;
 
                 Console.WriteLine("[L]ägg till bil");
                 Console.WriteLine("[P]arkera bil");
-                switch (key.KeyChar)
+                switch (key)
                 {
-                    case 'L':
-                    case 'l':
+                    case ConsoleKey.L:
                         // Lägg till ny bil
                         Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
                         var newCar = new ParkingItems.Car
@@ -35,8 +34,7 @@ namespace Grupp2Parking
                         Console.WriteLine("----------------------------------------------");
                         break;
 
-                    case 'P':
-                    case 'p':
+                    case ConsoleKey.P:
                         List<ParkingItems.Car> cars = ParkingHelpers.GetAllCars();
 
                         foreach (ParkingItems.Car c in cars)
@@ -48,6 +46,18 @@ namespace Grupp2Parking
                 }
             
             }
+        }
+        internal static void PrintParkingHouses(int CityId) {
+
+        }
+        internal static void PrintAvailableSlots() {
+
+        }
+        internal static void PrintCities() {
+
+        }
+        internal static void PrintParkedCars() {
+
         }
     }
 }
