@@ -110,5 +110,17 @@ namespace Grupp2Parking
             }
             return cars;
         }
+        public static int ParkCar(int carId, int spotId)
+        {
+            int affectedRow = 0;
+
+            string sql = $"UPDATE Cars SET ParkingSlotsId = {spotId} WHERE Id = {carId}";
+
+            using (var connection = new SqlConnection(connString))
+            {
+                affectedRow = connection.Execute(sql);
+            }
+            return affectedRow;
+        }
     }
 }
