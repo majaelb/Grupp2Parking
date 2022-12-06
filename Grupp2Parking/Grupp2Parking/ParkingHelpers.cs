@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using Grupp2Parking.Logic;
 
 namespace Grupp2Parking
 {
@@ -40,15 +41,7 @@ namespace Grupp2Parking
                         Console.WriteLine("----------------------------------------------");
                         break;
                     case 's':
-                        // Lägg till ny stad
-                        Console.WriteLine("Ange stad att lägga till");
-                        var newCity = new ParkingItems.City
-                        {
-                            CityName = Console.ReadLine()
-                        };
-                        int rowsAffected2 = InsertCity(newCity);
-                        Console.WriteLine("Antal städer tillagda: " + rowsAffected2);
-                        Console.WriteLine("----------------------------------------------");
+               
                         break;
                     case 'v':
                         // Visa städer
@@ -82,18 +75,17 @@ namespace Grupp2Parking
             return affectedRows;
         }
 
-        public static int InsertCity(ParkingItems.City city)
+        public static void InsertCity()
         {
-            int affectedRows = 0;
-
-            string sql = $"INSERT INTO Cities(CityName) VALUES('{city.CityName}')";
-
-            using (var connection = new SqlConnection(connString))
+            // Lägg till ny stad
+            Console.WriteLine("Ange stad att lägga till");
+            var newCity = new ParkingItems.City
             {
-                affectedRows = connection.Execute(sql);
-            }
-
-            return affectedRows;
+                CityName = Console.ReadLine()
+            };
+            bool success = ParkingLogic.AddCityToDatabase(newCity);
+            Console.WriteLine("Antal städer tillagda: " + success);
+            Console.WriteLine("----------------------------------------------");
         }
 
         public static List<ParkingItems.City> GetAllCities()
