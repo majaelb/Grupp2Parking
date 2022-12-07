@@ -120,9 +120,9 @@ namespace Grupp2Parking.Logic
             return parkingSlots;
         }
 
-        public static List<Car> GetAllCars()
+        public static List<Car> GetAllCars(string condition)
         {
-            var sql = "SELECT * FROM Cars";
+            var sql = $"SELECT * FROM Cars {condition}";
             var cars = new List<Car>();
 
             using (var connection = new SqlConnection(connString))
@@ -149,7 +149,7 @@ namespace Grupp2Parking.Logic
         internal static void ParkCar()
         {
             Console.WriteLine("Välj bil-ID");
-            var cars = GetAllCars();
+            var cars = GetAllCars("WHERE parkingslotsid is null");
             GUI.PrintUnParkedCars(cars);
             List<int> validIds = new();
             foreach(Car car in cars){

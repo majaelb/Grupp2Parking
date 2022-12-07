@@ -98,7 +98,7 @@ namespace Grupp2Parking.UserInterface
         {
             foreach (ParkingSlot slot in slots)
             {
-                Console.WriteLine($"{slot.CityName}\t{slot.HouseName}\t{slot.Id}, \t{(slot.ElectricOutlet ? "Elutttag" : "Ej Eluttag")}");
+                Console.WriteLine($"Id: {slot.Id}\t{slot.CityName}           \t\t{slot.HouseName}           \t\t{(slot.ElectricOutlet ? "Elutttag" : "Ej Eluttag")}");
             }
         }
         /**
