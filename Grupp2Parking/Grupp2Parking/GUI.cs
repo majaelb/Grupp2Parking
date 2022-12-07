@@ -27,14 +27,7 @@ namespace Grupp2Parking {
                     //Console.WriteLine("[A]vsluta");
                     case ConsoleKey.P:
                         //Bryt ut till en metod och placera någonstans?
-                        var car = ParkingLogic.GetCar();
-                        var city = ParkingLogic.GetCity();
-                        var house = ParkingLogic.GetParkingHouse(city);
-                        var slot = ParkingLogic.GetParkingSlot(house);
-                        car.ParkingSlotsId = slot.Id;
-                        if (!ParkingLogic.ParkCarAtGarage(car)) {
-                            //Felmeddelande
-                        }
+                        ParkingLogic.ParkCar();
                         /*
                         List<ParkingItems.Car> cars = ParkingHelpers.GetAllCars();
 
@@ -61,11 +54,14 @@ namespace Grupp2Parking {
 
             }
         }
+
+
+
         /**
-         * Information om alla relevanta data rörande parkering i en stad, 
-         * i.e. lista med parkeringshus, antal parkerade bilar, antal lediga platser, antalet elplatser+lediga elplatser
-         * 
-         */
+* Information om alla relevanta data rörande parkering i en stad, 
+* i.e. lista med parkeringshus, antal parkerade bilar, antal lediga platser, antalet elplatser+lediga elplatser
+* 
+*/
         private static void PrintOverviewStatus(int cityNumber) {
             throw new NotImplementedException();
         }
@@ -98,14 +94,38 @@ namespace Grupp2Parking {
         * Skriver ut en numrerad lista med alla städer
         */
         internal static void PrintCities() {
+            // Visa städer
+            List<City> cities = ParkingLogic.GetAllCities();
+
+            foreach (City c in cities)
+            {
+                Console.WriteLine($"{c.Id}\t{c.CityName}");
+            }
+            Console.WriteLine("----------------------------------------------");
 
         }
         /**
          * Skriver ut en lista med alla parkerade bilar
          */
-        internal static void PrintParkedCars() {
+        internal static void PrintParkedCars(List<Car> cars) {
+
+            foreach (ParkingItems.Car c in cars)
+            {
+                Console.WriteLine($"{c.Id}\t{c.Plate}\t{c.Make}\t{c.Color}\t{c.ParkingSlotsId}");
+            }
+            Console.WriteLine("----------------------------------------------");
 
         }
+
+        internal static void PrintUnParkedCars(List<Car> cars)
+        {
+            foreach (ParkingItems.Car c in cars)
+            {
+                Console.WriteLine($"{c.Id}\t{c.Plate}\t{c.Make}\t{c.Color}");
+            }
+            Console.WriteLine("----------------------------------------------");
+        }
+
         /**
          * Producerar en numrerad output av en lista
          */
