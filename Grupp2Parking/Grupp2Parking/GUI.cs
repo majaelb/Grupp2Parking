@@ -91,7 +91,7 @@ namespace Grupp2Parking {
         internal static void PrintAvailableSlots(List<ParkingSlot> slots) {
             foreach (ParkingSlot slot in slots)
             {
-                Console.WriteLine($"{slot.CityName}\t{slot.HouseName}\t{slot.Id}");
+                Console.WriteLine($"{slot.CityName}\t{slot.HouseName}\t{slot.Id}, \t{(slot.ElectricOutlet ? "Elutttag" : "Ej Eluttag")}");
             }
         }
         /**
