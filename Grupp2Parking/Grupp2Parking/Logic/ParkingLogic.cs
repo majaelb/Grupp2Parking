@@ -9,72 +9,59 @@ using Dapper;
 using System.Runtime.ConstrainedExecution;
 using Grupp2Parking.UserInterface;
 
-namespace Grupp2Parking.Logic
-{
-    internal class ParkingLogic
-    {
+namespace Grupp2Parking.Logic {
+    internal class ParkingLogic {
         static readonly string connString = "data source=.\\SQLEXPRESS; initial catalog=Grupp2Parking; persist security info=True; Integrated Security=True";
-        public static bool AddCarToDatabase(Car car)
-        {
+        public static bool AddCarToDatabase(Car car) {
             int affectedRows = 0;
 
             string sql = $"INSERT INTO Cars(Plate, Make, Color) VALUES('{car.Plate}', '{car.Make}', '{car.Color}')";
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 affectedRows = connection.Execute(sql);
             }
 
             return affectedRows > 0;
         }
-        public static bool AddCityToDatabase(City city)
-        {
+        public static bool AddCityToDatabase(City city) {
             int affectedRows = 0;
 
             string sql = $"INSERT INTO Cities(CityName) VALUES('{city.CityName}')";
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 affectedRows = connection.Execute(sql);
             }
 
             return affectedRows > 0;
         }
-        public static bool AddParkinghouseToDatabase(ParkingHouse house)
-        {
+        public static bool AddParkinghouseToDatabase(ParkingHouse house) {
             int affectedRows = 0;
 
             string sql = $"INSERT INTO ParkingHouses(HouseName, CityId) VALUES('{house.HouseName}', '{house.CityId}')";
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 affectedRows = connection.Execute(sql);
             }
 
             return affectedRows > 0;
         }
-        public static bool AddParkingSlotsToParkingHouse(int id)
-        {
-            var slotCount = InputModule.GetIntInRange(1, 50);
-            var electricCount = InputModule.GetIntInRange(1, slotCount);
+        public static bool AddParkingSlotsToParkingHouse(int slotCount, int electricCount, int houseId) {
             int affectedRows = 0;
 
-            for (int i = 0; i < slotCount; i++)
-            {
-                string sql = $"INSERT INTO ParkingSlot(Slotnumber, ElectricOutlet, ParkingHouseId) VALUES('{i + 1}', {electricCount < slotCount ?  '{house.CityId}')";
+            for (int i = 0; i < slotCount; i++) {
+                string sql = $"INSERT INTO ParkingSlots(Slotnumber, ElectricOutlet, " +
+                    $"ParkingHouseId) VALUES('{i + 1}', '{(i < electricCount)}', '{houseId}')";
+                //$"ParkingHouseId) VALUES({i + 1}, {(slotCount < electricCount ? 1 : 0)}, {houseId})";
 
-                using (var connection = new SqlConnection(connString))
-                {
+                using (var connection = new SqlConnection(connString)) {
                     affectedRows = connection.Execute(sql);
                 }
             }
             return affectedRows > 0;
         }
 
-        public static void InsertCar()
-        {
+        public static void InsertCar() {
             Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
-            var newCar = new Car
-            {
+            var newCar = new Car {
                 Plate = Console.ReadLine().ToUpper(),
                 Make = Console.ReadLine(),
                 Color = Console.ReadLine()
@@ -84,12 +71,10 @@ namespace Grupp2Parking.Logic
             Console.WriteLine("----------------------------------------------");
         }
 
-        public static void InsertCity()
-        {
+        public static void InsertCity() {
             // Lägg till ny stad
             Console.WriteLine("Ange stad att lägga till");
-            var newCity = new City
-            {
+            var newCity = new City {
                 CityName = Console.ReadLine()
             };
             bool success = AddCityToDatabase(newCity);
@@ -97,37 +82,44 @@ namespace Grupp2Parking.Logic
             Console.WriteLine("----------------------------------------------");
         }
 
-        public static void InsertParkingHouse()
-        {
+        public static int InsertParkingHouse() {
             // Lägg till ny stad
             GUI.PrintCities();
             Console.WriteLine("Välj stads-Id för nytt parkeringshus: ");
             var cities = GetAllCities();
             List<int> validIds = new();
-            foreach (City city in cities)
-            {
+            foreach (City city in cities) {
                 validIds.Add(city.Id);
             }
             var CityId = InputModule.GetValidatedInt(validIds);
             validIds.Clear();
             Console.Clear();
-            var newParkingHouse = new ParkingHouse
-            {
-                HouseName = Console.ReadLine()
+            Console.WriteLine("Ange namnet på det nya p-huset");
+            var newParkingHouse = new ParkingHouse {
+                HouseName = Console.ReadLine(),
+                CityId = CityId
             };
-            newParkingHouse.CityId = CityId;
             bool success = AddParkinghouseToDatabase(newParkingHouse);
             Console.WriteLine("Antal parkeringshus tillagda: " + success);
             Console.WriteLine("----------------------------------------------");
+            return success ? ParkingLogic.FindParkingHouseId(newParkingHouse) : -1;
         }
 
-        public static List<City> GetAllCities()
-        {
+        private static int FindParkingHouseId(ParkingHouse newParkingHouse) {
+            var sql = $"SELECT Id FROM ParkingHouses WHERE houseName = '{newParkingHouse.HouseName}'";
+            var parkingHouses = new List<ParkingHouse>();
+
+            using (var connection = new SqlConnection(connString)) {
+                parkingHouses = connection.Query<ParkingHouse>(sql).ToList();
+            }
+            return parkingHouses[0].Id;
+        }
+
+        public static List<City> GetAllCities() {
             var sql = "SELECT * FROM Cities";
             var cities = new List<City>();
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 cities = connection.Query<City>(sql).ToList();
             }
             return cities;
@@ -135,8 +127,7 @@ namespace Grupp2Parking.Logic
         }
 
 
-        public static List<ParkingSlot> GetAllFreeSlots()
-        {
+        public static List<ParkingSlot> GetAllFreeSlots() {
             var sql = @"SELECT
 	                c.CityName,
 	                ph.HouseName,
@@ -154,46 +145,40 @@ namespace Grupp2Parking.Logic
 	                car.ParkingSlotsId IS NULL";
             var parkingSlots = new List<ParkingSlot>();
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 parkingSlots = connection.Query<ParkingSlot>(sql).ToList();
             }
             return parkingSlots;
         }
 
-        public static List<Car> GetAllCars(string condition)
-        {
+        public static List<Car> GetAllCars(string condition) {
             var sql = $"SELECT * FROM Cars {condition}";
             var cars = new List<Car>();
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 cars = connection.Query<Car>(sql).ToList();
             }
             return cars;
         }
 
 
-        public static bool ParkCarAtSlot(int carId, int? slotId)
-        {
+        public static bool ParkCarAtSlot(int carId, int? slotId) {
             int affectedRow = 0;
 
             string sql = $"UPDATE Cars SET ParkingSlotsId = {(slotId == null ? "NULL" : slotId)} WHERE Id = {carId}";
 
-            using (var connection = new SqlConnection(connString))
-            {
+            using (var connection = new SqlConnection(connString)) {
                 affectedRow = connection.Execute(sql);
             }
             return affectedRow > 0;
         }
 
-        internal static void ParkCar()
-        {
+        internal static void ParkCar() {
             Console.WriteLine("Välj bil-ID");
             var cars = GetAllCars("WHERE parkingslotsid is null");
             GUI.PrintUnParkedCars(cars);
             List<int> validIds = new();
-            foreach(Car car in cars){
+            foreach (Car car in cars) {
                 validIds.Add(car.Id);
             }
             var carId = InputModule.GetValidatedInt(validIds);
@@ -209,47 +194,43 @@ namespace Grupp2Parking.Logic
             Console.Clear();
             //var city = ParkingLogic.GetCity();
             //var house = ParkingLogic.GetParkingHouse(city);
-            if (ParkingLogic.ParkCarAtSlot(carId, slotId))
-            {
+            if (ParkingLogic.ParkCarAtSlot(carId, slotId)) {
                 Console.WriteLine("Du har parkerat bil " + carId + " på plats " + slotId);
             } else {
                 Console.WriteLine("Kunde inte parkera bil " + carId + " på plats " + slotId);
             }
         }
 
-        internal static void UnParkCar()
-        {
+        internal static void UnParkCar() {
             Console.WriteLine("Välj bil-ID");
             var cars = GetAllCars("WHERE parkingslotsid IS NOT NULL");
             GUI.PrintParkedCars(cars);
             List<int> validIds = new();
-            foreach (Car car in cars)
-            {
+            foreach (Car car in cars) {
                 validIds.Add(car.Id);
             }
             var carId = InputModule.GetValidatedInt(validIds);
             validIds.Clear();
             Console.Clear();
-            if (ParkingLogic.ParkCarAtSlot(carId, null))
-            {
+            if (ParkingLogic.ParkCarAtSlot(carId, null)) {
                 Console.WriteLine("Du har checkat ut bil " + carId);
-            }
-            else
-            {
+            } else {
                 Console.WriteLine("Kunde inte checka ut bil " + carId);
             }
         }
 
 
 
-        internal static ParkingSlot GetParkingSlot()
-        {
+        internal static ParkingSlot GetParkingSlot() {
             throw new NotImplementedException();
         }
 
-        internal static void InsertParkingSlotsToParkingHouse()
-        {
-            
+        internal static void InsertParkingSlotsToParkingHouse(int houseId) {
+            Console.WriteLine("Antal platser att lägga till: (1-50)");
+            var slotCount = InputModule.GetIntInRange(1, 50);
+            Console.WriteLine("Varav platser med elbilsladdning (under antalet platser!)");
+            var electricCount = InputModule.GetIntInRange(1, slotCount);
+            AddParkingSlotsToParkingHouse(slotCount, electricCount, houseId);
         }
     }
 }

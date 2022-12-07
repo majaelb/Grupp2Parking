@@ -94,8 +94,10 @@ namespace Grupp2Parking.UserInterface
                     ParkingLogic.InsertCity();
                     break;
                 case ConsoleKey.P:
-                    ParkingLogic.InsertParkingHouse();
-                    ParkingLogic.InsertParkingSlotsToParkingHouse();
+                    int houseId = ParkingLogic.InsertParkingHouse();
+                    if (houseId > 0) {
+                        ParkingLogic.InsertParkingSlotsToParkingHouse(houseId);
+                    }
                     break;
 
             }
