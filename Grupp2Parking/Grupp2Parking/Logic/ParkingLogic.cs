@@ -98,8 +98,8 @@ namespace Grupp2Parking.Logic
             var sql = @"SELECT
 	                c.CityName,
 	                ph.HouseName,
-	                ps.Id AS Slot,
-	                ps.Id AS SlotId
+	                ps.Id,
+                    ps.ElectricOutlet
                 FROM 
 	                Cities c
                 JOIN
@@ -132,11 +132,11 @@ namespace Grupp2Parking.Logic
         }
 
 
-        public static bool ParkCarAtGarage(Car car)
+        public static bool ParkCarAtSlot(int carId, int slotId)
         {
             int affectedRow = 0;
 
-            string sql = $"UPDATE Cars SET ParkingSlotsId = {car.ParkingSlotsId} WHERE Id = {car.Id}";
+            string sql = $"UPDATE Cars SET ParkingSlotsId = {slotId} WHERE Id = {carId}";
 
             using (var connection = new SqlConnection(connString))
             {
@@ -150,22 +150,22 @@ namespace Grupp2Parking.Logic
             var cars = GetAllCars();
             GUI.PrintUnParkedCars(cars);
             var slots = GetAllFreeSlots();
-            GUI.PrintAvailableSlots()
+            GUI.PrintAvailableSlots(slots);
 
-            var car = ParkingLogic.GetCar();
-            var slot = ParkingLogic.GetParkingSlot();
+            var carId = ParkingLogic.GetId();
+            var slotId = ParkingLogic.GetId();
             //var city = ParkingLogic.GetCity();
             //var house = ParkingLogic.GetParkingHouse(city);
-            car.ParkingSlotsId = slot.Id;
-            if (!ParkingLogic.ParkCarAtGarage(car))
+            if (!ParkingLogic.ParkCarAtSlot(carId, slotId))
             {
                 //Felmeddelande
             }
         }
 
-        internal static Car GetCar()
+        internal static int GetId()
         {
-            throw new NotImplementedException();
+            int Id = Int32.Parse(Console.ReadLine());
+            return Id;
         }
 
         internal static City GetCity()

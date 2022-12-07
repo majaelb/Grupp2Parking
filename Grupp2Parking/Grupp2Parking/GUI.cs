@@ -62,8 +62,9 @@ namespace Grupp2Parking {
 * i.e. lista med parkeringshus, antal parkerade bilar, antal lediga platser, antalet elplatser+lediga elplatser
 * 
 */
-        private static void PrintOverviewStatus(int cityNumber) {
-            throw new NotImplementedException();
+        private static void PrintOverviewStatus(int cityNumber)
+        {
+            //throw new NotImplementedException();
         }
 
         private static void PrintMenuOptions() {
@@ -87,8 +88,11 @@ namespace Grupp2Parking {
         /**
         * Skriver ut en numrerad lista med alla lediga platser i ett parkeringshus
         */
-        internal static void PrintAvailableSlots(int ParkinghouseId, bool isElectric) {
-
+        internal static void PrintAvailableSlots(List<ParkingSlot> slots) {
+            foreach (ParkingSlot slot in slots)
+            {
+                Console.WriteLine($"{slot.CityName}\t{slot.HouseName}\t{slot.Id}");
+            }
         }
         /**
         * Skriver ut en numrerad lista med alla städer
@@ -109,7 +113,7 @@ namespace Grupp2Parking {
          */
         internal static void PrintParkedCars(List<Car> cars) {
 
-            foreach (ParkingItems.Car c in cars)
+            foreach (Car c in cars)
             {
                 Console.WriteLine($"{c.Id}\t{c.Plate}\t{c.Make}\t{c.Color}\t{c.ParkingSlotsId}");
             }
@@ -119,7 +123,7 @@ namespace Grupp2Parking {
 
         internal static void PrintUnParkedCars(List<Car> cars)
         {
-            foreach (ParkingItems.Car c in cars)
+            foreach (Car c in cars)
             {
                 Console.WriteLine($"{c.Id}\t{c.Plate}\t{c.Make}\t{c.Color}");
             }
