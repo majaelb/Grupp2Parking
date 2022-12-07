@@ -147,19 +147,22 @@ namespace Grupp2Parking.Logic
 
         internal static void ParkCar()
         {
+            Console.WriteLine("Välj bil-ID");
             var cars = GetAllCars();
             GUI.PrintUnParkedCars(cars);
+            var carId = ParkingLogic.GetId();
+            Console.WriteLine("Välj parkeringsplats-ID");
             var slots = GetAllFreeSlots();
             GUI.PrintAvailableSlots(slots);
-
-            var carId = ParkingLogic.GetId();
             var slotId = ParkingLogic.GetId();
+
             //var city = ParkingLogic.GetCity();
             //var house = ParkingLogic.GetParkingHouse(city);
             if (!ParkingLogic.ParkCarAtSlot(carId, slotId))
             {
                 //Felmeddelande
             }
+            Console.WriteLine("Du har parkerat bil " + carId + " på plats " + slotId);
         }
 
         internal static int GetId()

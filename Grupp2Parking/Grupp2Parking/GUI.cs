@@ -12,21 +12,13 @@ namespace Grupp2Parking {
             bool runProgram = true;
 
             while (runProgram) {
-                var key = Console.ReadKey(true).Key;
                 PrintOverviewStatus(1);
                 PrintMenuOptions();
+                var key = Console.ReadKey(true).Key;
 
                 switch (key) {
 
-                    //Console.WriteLine("Välj funktion");
-                    //Console.WriteLine("====");
-                    //Console.WriteLine("[P]arkera");
-                    //Console.WriteLine("[A]vparkera");
-                    //Console.WriteLine("[L]ägga till");
-                    //Console.WriteLine("[V]isa detaljer");
-                    //Console.WriteLine("[A]vsluta");
                     case ConsoleKey.P:
-                        //Bryt ut till en metod och placera någonstans?
                         ParkingLogic.ParkCar();
                         /*
                         List<ParkingItems.Car> cars = ParkingHelpers.GetAllCars();
