@@ -46,9 +46,9 @@ namespace Grupp2Parking.Logic {
         }
         public static bool AddParkingSlotsToParkingHouse(int slotCount, int electricCount, int houseId) {
             int affectedRows = 0;
-
+            string sql;
             for (int i = 0; i < slotCount; i++) {
-                string sql = $"INSERT INTO ParkingSlots(Slotnumber, ElectricOutlet, " +
+                sql = $"INSERT INTO ParkingSlots(Slotnumber, ElectricOutlet, " +
                     $"ParkingHouseId) VALUES('{i + 1}', '{(i < electricCount)}', '{houseId}')";
                 //$"ParkingHouseId) VALUES({i + 1}, {(slotCount < electricCount ? 1 : 0)}, {houseId})";
 
@@ -59,23 +59,23 @@ namespace Grupp2Parking.Logic {
             return affectedRows > 0;
         }
 
-        public static void InsertCar() {
+        public static void InsertCar(string plate, string make, string color) {
             Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
             var newCar = new Car {
-                Plate = Console.ReadLine().ToUpper(),
-                Make = Console.ReadLine(),
-                Color = Console.ReadLine()
+                Plate = plate,
+                Make = make,
+                Color = color
             };
             bool success = AddCarToDatabase(newCar);
             Console.WriteLine("Antal bilar tillagda: " + success);
             Console.WriteLine("----------------------------------------------");
         }
 
-        public static void InsertCity() {
+        public static void InsertCity(string cityName) {
             // Lägg till ny stad
             Console.WriteLine("Ange stad att lägga till");
             var newCity = new City {
-                CityName = Console.ReadLine()
+                CityName = cityName
             };
             bool success = AddCityToDatabase(newCity);
             Console.WriteLine("Antal städer tillagda: " + success);
@@ -228,7 +228,7 @@ namespace Grupp2Parking.Logic {
         internal static void InsertParkingSlotsToParkingHouse(int houseId) {
             Console.WriteLine("Antal platser att lägga till: (1-50)");
             var slotCount = InputModule.GetIntInRange(1, 50);
-            Console.WriteLine("Varav platser med elbilsladdning (under antalet platser!)");
+            Console.WriteLine($"Varav platser med elbilsladdning (<{slotCount})");
             var electricCount = InputModule.GetIntInRange(1, slotCount);
             AddParkingSlotsToParkingHouse(slotCount, electricCount, houseId);
         }

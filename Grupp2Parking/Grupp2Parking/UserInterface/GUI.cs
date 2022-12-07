@@ -88,10 +88,10 @@ namespace Grupp2Parking.UserInterface
             switch (key)
             {
                 case ConsoleKey.B:                   
-                    ParkingLogic.InsertCar();
+                    //ParkingLogic.InsertCar();
                     break;
                 case ConsoleKey.S:
-                    ParkingLogic.InsertCity();
+                    //ParkingLogic.InsertCity();
                     break;
                 case ConsoleKey.P:
                     int houseId = ParkingLogic.InsertParkingHouse();

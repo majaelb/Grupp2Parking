@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Grupp2Parking.UserInterface {
@@ -15,6 +16,23 @@ namespace Grupp2Parking.UserInterface {
                 int validint = GetInt();
                 if (validationList.Contains(validint)) {
                     return validint;
+                }
+            }
+        }
+        /**
+         * Gets a string validated against a regular expression
+         * ^ anchors front
+         * [0-9]{3} 3 Figures
+         * [A-Z]{3} 3 Uppercase letters
+         * $ anchors end
+         * 
+         * Give a bad expression is VERY DANGER! and will lock the program in nonterminating loop
+         */
+        internal static string GetValidatedString(string patternRegEx = "^[A-Z]{3}[0-9]{3}$") {
+            while (true) {
+                string validateString = GetString().ToUpper();
+                if (Regex.IsMatch(validateString, patternRegEx)) {
+                    return validateString;
                 }
             }
         }
