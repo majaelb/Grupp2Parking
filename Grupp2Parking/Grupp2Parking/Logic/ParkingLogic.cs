@@ -52,6 +52,23 @@ namespace Grupp2Parking.Logic
 
             return affectedRows > 0;
         }
+        public static bool AddParkingSlotsToParkingHouse(int id)
+        {
+            var slotCount = InputModule.GetIntInRange(1, 50);
+            var electricCount = InputModule.GetIntInRange(1, slotCount);
+            int affectedRows = 0;
+
+            for (int i = 0; i < slotCount; i++)
+            {
+                string sql = $"INSERT INTO ParkingSlot(Slotnumber, ElectricOutlet, ParkingHouseId) VALUES('{i + 1}', {electricCount < slotCount ?  '{house.CityId}')";
+
+                using (var connection = new SqlConnection(connString))
+                {
+                    affectedRows = connection.Execute(sql);
+                }
+            }
+            return affectedRows > 0;
+        }
 
         public static void InsertCar()
         {
@@ -83,13 +100,24 @@ namespace Grupp2Parking.Logic
         public static void InsertParkingHouse()
         {
             // Lägg till ny stad
-            Console.WriteLine("Ange stad att lägga till");
-            var newCity = new City
+            GUI.PrintCities();
+            Console.WriteLine("Välj stads-Id för nytt parkeringshus: ");
+            var cities = GetAllCities();
+            List<int> validIds = new();
+            foreach (City city in cities)
             {
-                CityName = Console.ReadLine()
+                validIds.Add(city.Id);
+            }
+            var CityId = InputModule.GetValidatedInt(validIds);
+            validIds.Clear();
+            Console.Clear();
+            var newParkingHouse = new ParkingHouse
+            {
+                HouseName = Console.ReadLine()
             };
-            bool success = AddCityToDatabase(newCity);
-            Console.WriteLine("Antal städer tillagda: " + success);
+            newParkingHouse.CityId = CityId;
+            bool success = AddParkinghouseToDatabase(newParkingHouse);
+            Console.WriteLine("Antal parkeringshus tillagda: " + success);
             Console.WriteLine("----------------------------------------------");
         }
 
@@ -219,6 +247,9 @@ namespace Grupp2Parking.Logic
             throw new NotImplementedException();
         }
 
-        
+        internal static void InsertParkingSlotsToParkingHouse()
+        {
+            
+        }
     }
 }

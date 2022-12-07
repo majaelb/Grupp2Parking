@@ -95,6 +95,7 @@ namespace Grupp2Parking.UserInterface
                     break;
                 case ConsoleKey.P:
                     ParkingLogic.InsertParkingHouse();
+                    ParkingLogic.InsertParkingSlotsToParkingHouse();
                     break;
 
             }
