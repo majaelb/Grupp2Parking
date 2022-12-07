@@ -80,6 +80,19 @@ namespace Grupp2Parking.Logic
             Console.WriteLine("----------------------------------------------");
         }
 
+        public static void InsertParkingHouse()
+        {
+            // Lägg till ny stad
+            Console.WriteLine("Ange stad att lägga till");
+            var newCity = new City
+            {
+                CityName = Console.ReadLine()
+            };
+            bool success = AddCityToDatabase(newCity);
+            Console.WriteLine("Antal städer tillagda: " + success);
+            Console.WriteLine("----------------------------------------------");
+        }
+
         public static List<City> GetAllCities()
         {
             var sql = "SELECT * FROM Cities";
@@ -133,11 +146,11 @@ namespace Grupp2Parking.Logic
         }
 
 
-        public static bool ParkCarAtSlot(int carId, int slotId)
+        public static bool ParkCarAtSlot(int carId, int? slotId)
         {
             int affectedRow = 0;
 
-            string sql = $"UPDATE Cars SET ParkingSlotsId = {slotId} WHERE Id = {carId}";
+            string sql = $"UPDATE Cars SET ParkingSlotsId = {(slotId == null ? "NULL" : slotId)} WHERE Id = {carId}";
 
             using (var connection = new SqlConnection(connString))
             {
@@ -176,25 +189,36 @@ namespace Grupp2Parking.Logic
             }
         }
 
-        internal static int GetId()
+        internal static void UnParkCar()
         {
-            int Id = Int32.Parse(Console.ReadLine());
-            return Id;
+            Console.WriteLine("Välj bil-ID");
+            var cars = GetAllCars("WHERE parkingslotsid IS NOT NULL");
+            GUI.PrintParkedCars(cars);
+            List<int> validIds = new();
+            foreach (Car car in cars)
+            {
+                validIds.Add(car.Id);
+            }
+            var carId = InputModule.GetValidatedInt(validIds);
+            validIds.Clear();
+            Console.Clear();
+            if (ParkingLogic.ParkCarAtSlot(carId, null))
+            {
+                Console.WriteLine("Du har checkat ut bil " + carId);
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte checka ut bil " + carId);
+            }
         }
 
-        internal static City GetCity()
-        {
-            throw new NotImplementedException();
-        }
 
-        internal static ParkingHouse GetParkingHouse(City city)
-        {
-            throw new NotImplementedException();
-        }
 
         internal static ParkingSlot GetParkingSlot()
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

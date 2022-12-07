@@ -17,6 +17,7 @@ namespace Grupp2Parking.UserInterface
 
             while (runProgram)
             {
+                Console.Clear();
                 PrintOverviewStatus(1);
                 PrintMenuOptions();
                 var key = Console.ReadKey(true).Key;
@@ -29,7 +30,7 @@ namespace Grupp2Parking.UserInterface
                         Console.WriteLine("Aktivt val:");
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("[P]arkera");
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.ForegroundColor = ConsoleColor.Gray;
                         ParkingLogic.ParkCar();
                         /*
                         List<ParkingItems.Car> cars = ParkingHelpers.GetAllCars();
@@ -41,12 +42,25 @@ namespace Grupp2Parking.UserInterface
                         */
                         break;
                     case ConsoleKey.A: //Lista bilar med numrerat val?
-                                       //Val för söka bil baserat på regskylt?
-                                       //Hämta bil från vald metod
-                                       //Försök ta bort Bilen Från Databasen
+                        Console.Clear();
+                        Console.WriteLine("Aktivt val:");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("[A]vparkera");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        ParkingLogic.UnParkCar();
+                        //Val för söka bil baserat på regskylt?
+                        //Hämta bil från vald metod
+                        //Försök ta bort Bilen Från Databasen
                         break;
-                    case ConsoleKey.L: //Visa Lista med "Saker" att Lägga till
-                                       //Välj från listan och anropa rätt metod
+                    case ConsoleKey.L:
+                        Console.Clear();
+                        Console.WriteLine("Aktivt val:");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("[L]ägga till");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        GUI.AddMenu();
+                        //Visa Lista med "Saker" att Lägga till
+                        //Välj från listan och anropa rätt metod
                         break;
                     case ConsoleKey.V: //Visa Lista med alternativ att kolla djupare på
                                        //Välj från listan och anropa rätt metod
@@ -55,6 +69,33 @@ namespace Grupp2Parking.UserInterface
                         runProgram = false;
                         break;
                 }
+                Thread.Sleep(1500);
+
+            }
+        }
+
+        internal static void AddMenu()
+        {
+            Console.WriteLine("Välj sak att lägga till");
+            Console.WriteLine("====");
+            Console.WriteLine("[B]il");
+            Console.WriteLine("[S]tad");
+            Console.WriteLine("[P]arkeringshus");
+            Console.WriteLine("[Q]vsluta");
+
+            var key = Console.ReadKey(true).Key;
+
+            switch (key)
+            {
+                case ConsoleKey.B:                   
+                    ParkingLogic.InsertCar();
+                    break;
+                case ConsoleKey.S:
+                    ParkingLogic.InsertCity();
+                    break;
+                case ConsoleKey.P:
+                    ParkingLogic.InsertParkingHouse();
+                    break;
 
             }
         }
