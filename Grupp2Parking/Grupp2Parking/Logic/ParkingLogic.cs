@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using System.Runtime.ConstrainedExecution;
+using Grupp2Parking.UserInterface;
 
 namespace Grupp2Parking.Logic
 {
@@ -150,19 +151,29 @@ namespace Grupp2Parking.Logic
             Console.WriteLine("Välj bil-ID");
             var cars = GetAllCars();
             GUI.PrintUnParkedCars(cars);
-            var carId = ParkingLogic.GetId();
+            List<int> validIds = new();
+            foreach(Car car in cars){
+                validIds.Add(car.Id);
+            }
+            var carId = InputModule.GetValidatedInt(validIds);
+            validIds.Clear();
+            Console.Clear();
             Console.WriteLine("Välj parkeringsplats-ID");
             var slots = GetAllFreeSlots();
             GUI.PrintAvailableSlots(slots);
-            var slotId = ParkingLogic.GetId();
-
+            foreach (ParkingSlot slot in slots) {
+                validIds.Add(slot.Id);
+            }
+            var slotId = InputModule.GetValidatedInt(validIds);
+            Console.Clear();
             //var city = ParkingLogic.GetCity();
             //var house = ParkingLogic.GetParkingHouse(city);
-            if (!ParkingLogic.ParkCarAtSlot(carId, slotId))
+            if (ParkingLogic.ParkCarAtSlot(carId, slotId))
             {
-                //Felmeddelande
+                Console.WriteLine("Du har parkerat bil " + carId + " på plats " + slotId);
+            } else {
+                Console.WriteLine("Kunde inte parkera bil " + carId + " på plats " + slotId);
             }
-            Console.WriteLine("Du har parkerat bil " + carId + " på plats " + slotId);
         }
 
         internal static int GetId()

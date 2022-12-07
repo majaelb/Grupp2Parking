@@ -1,4 +1,6 @@
-﻿namespace Grupp2Parking
+﻿using Grupp2Parking.UserInterface;
+
+namespace Grupp2Parking
 {
     internal class Program
     {
