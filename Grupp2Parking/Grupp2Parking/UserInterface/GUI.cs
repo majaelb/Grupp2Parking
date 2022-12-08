@@ -68,7 +68,7 @@ namespace Grupp2Parking.UserInterface
                         Console.Clear();
                         Console.WriteLine("Aktivt val:");
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("[V]isa detaljer (Stad/P-hus)");
+                        Console.WriteLine("[V]isa detaljer (Stad/P-hus/Parkerade bilar)");
                         Console.ForegroundColor = ConsoleColor.Gray;
                         GUI.ShowMenu();
                         //Visa Lista med alternativ att kolla djupare på
@@ -167,7 +167,7 @@ namespace Grupp2Parking.UserInterface
             Console.WriteLine("[P]arkera");
             Console.WriteLine("[C]hecka ut bil");
             Console.WriteLine("[L]ägga till (Stad/P-hus/Bil)");
-            Console.WriteLine("[V]isa detaljer (Stad/P-hus)");
+            Console.WriteLine("[V]isa detaljer (Stad/P-hus)/Parkerade bilar");
             Console.WriteLine("[A]vsluta");
             //Console.WriteLine("W: Växla inmatningsläge för fordon (manuellt, automatiskt)");
             //Console.WriteLine("+-: Växla stad");
