@@ -19,7 +19,7 @@ namespace Grupp2Parking.UserInterface
             while (runProgram)
             {
                 Console.Clear();
-                PrintParkingHouses();
+                PrintParkingHouses(false);
                 Console.WriteLine("-----------------------------------------------------------------------------------------");
                 PrintMenuOptions();
                 var key = Console.ReadKey(true).Key;
@@ -176,9 +176,9 @@ namespace Grupp2Parking.UserInterface
         /**
          * Skriver ut en numrerad lista med alla parkeringhus i en stad
          */
-        internal static void PrintParkingHouses()
+        internal static void PrintParkingHouses(bool detailedView = true)
         {
-            List<ParkingHouse> houses = ParkingLogic.GetAllParkingHouses();
+            List<ParkingHouse> houses = ParkingLogic.GetAllParkingHouses(detailedView);
             Console.WriteLine("Stad            \tP-hus           \tElplatser         Upptagna         Lediga");
             foreach (ParkingHouse house in houses)
             {

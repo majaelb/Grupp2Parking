@@ -151,10 +151,10 @@ namespace Grupp2Parking.Logic {
             return parkingSlots;
         }
 
-        public static List<ParkingHouse> GetAllParkingHouses()
+        public static List<ParkingHouse> GetAllParkingHouses(bool detailedView = true)
         {
-            var sql = @"SELECT ParkingHouses.HouseName AS [Parkeringshus]
-                      ,Cities.CityName AS [Stad]
+            var sql = @$"SELECT Cities.CityName AS [Stad]
+                      {(detailedView ? ",ParkingHouses.HouseName AS [Parkeringshus]" : null) }
                       ,SUM(CASE WHEN ElectricOutlet = 'true' THEN 1 ELSE 0 END) AS [Elplatser]
                       ,SUM(CASE WHEN ParkingSlots.Id = Cars.ParkingSlotsId THEN 1 ELSE 0 END) AS [UpptagnaPlatser]
                       ,COUNT(*) - SUM(CASE WHEN ParkingSlots.Id = Cars.ParkingSlotsId THEN 1 ELSE 0 END) AS [LedigaPlatser]
@@ -166,7 +166,7 @@ namespace Grupp2Parking.Logic {
                         ParkingSlots ON ParkingSlots.ParkingHouseId = ParkingHouses.Id
                     LEFT JOIN
                     Cars ON ParkingSlots.Id = cars.ParkingSlotsId
-                    GROUP BY Cities.CityName, ParkingHouses.HouseName ";
+                    GROUP BY Cities.CityName {(detailedView ? ", ParkingHouses.HouseName" : null)}";
             var parkingHouses = new List<ParkingHouse>();
 
             using (var connection = new SqlConnection(connString))
