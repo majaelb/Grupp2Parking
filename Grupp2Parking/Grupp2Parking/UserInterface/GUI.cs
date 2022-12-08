@@ -19,7 +19,8 @@ namespace Grupp2Parking.UserInterface
             while (runProgram)
             {
                 Console.Clear();
-                PrintOverviewStatus(1);
+                PrintParkingHouses();
+                Console.WriteLine("-----------------------------------------------------------------------------------------");
                 PrintMenuOptions();
                 var key = Console.ReadKey(true).Key;
 
@@ -227,14 +228,6 @@ namespace Grupp2Parking.UserInterface
                 Console.WriteLine($"{c.Id}\t{c.Plate}\t{c.Make}\t{c.Color}");
             }
             Console.WriteLine("----------------------------------------------");
-        }
-
-        /**
-         * Producerar en numrerad output av en lista
-         */
-        internal static void PrintNumberedOutput(List<string> items)
-        {
-
         }
     }
 }

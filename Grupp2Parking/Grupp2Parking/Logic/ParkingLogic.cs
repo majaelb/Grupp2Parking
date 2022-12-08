@@ -244,12 +244,6 @@ namespace Grupp2Parking.Logic {
             }
         }
 
-
-
-        internal static ParkingSlot GetParkingSlot() {
-            throw new NotImplementedException();
-        }
-
         internal static void InsertParkingSlotsToParkingHouse(int houseId) {
             Console.WriteLine("Antal platser att lägga till: (1-50)");
             var slotCount = InputModule.GetIntInRange(1, 50);
