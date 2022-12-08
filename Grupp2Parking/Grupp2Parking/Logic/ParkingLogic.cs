@@ -166,7 +166,8 @@ namespace Grupp2Parking.Logic {
                         ParkingSlots ON ParkingSlots.ParkingHouseId = ParkingHouses.Id
                     LEFT JOIN
                     Cars ON ParkingSlots.Id = cars.ParkingSlotsId
-                    GROUP BY Cities.CityName {(detailedView ? ", ParkingHouses.HouseName" : null)}";
+                    GROUP BY Cities.CityName {(detailedView ? ", ParkingHouses.HouseName" : null)}
+                    ORDER BY Cities.CityName, ParkingHouses.HouseName";
             var parkingHouses = new List<ParkingHouse>();
 
             using (var connection = new SqlConnection(connString))
