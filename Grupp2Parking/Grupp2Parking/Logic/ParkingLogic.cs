@@ -1,12 +1,6 @@
 ﻿using Grupp2Parking.ParkingItems;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
-using System.Runtime.ConstrainedExecution;
 using Grupp2Parking.UserInterface;
 
 namespace Grupp2Parking.Logic {
@@ -59,23 +53,34 @@ namespace Grupp2Parking.Logic {
             return affectedRows > 0;
         }
 
-        public static void InsertCar(string plate, string make, string color) {
-            Console.WriteLine("Ange registreringsnummer(ABC123), märke och färg");
+        public static void InsertCar() {
+            Console.WriteLine("Ange registreringsnummer(ABC123)");
+            var plate = InputModule.GetValidatedString();
+            if (IsPlateInDatabase(plate)) {
+                Console.WriteLine("Registreringsnumret är redan upptaget!");
+                Console.ReadKey(true);
+                return;
+            }
+            Console.WriteLine("Registreringsnummer accepterat");
+            Console.WriteLine("Ange Bilens tillverkare");
+            var make = InputModule.GetString();
+            Console.WriteLine("Ange bilens färg");
+            var color = InputModule.GetString();
             var newCar = new Car {
                 Plate = plate,
                 Make = make,
-                Color = color
+                Color = color,
             };
             bool success = AddCarToDatabase(newCar);
-            Console.WriteLine("Antal bilar tillagda: " + success);
+            Console.WriteLine($"{(success? "Bilen med regnr "+ plate +" blev tillagd": "Kunde inte parkera bilen" )}");
             Console.WriteLine("----------------------------------------------");
         }
 
-        public static void InsertCity(string cityName) {
+        public static void InsertCity() {
             // Lägg till ny stad
             Console.WriteLine("Ange stad att lägga till");
             var newCity = new City {
-                CityName = cityName
+                CityName = InputModule.GetString()
             };
             bool success = AddCityToDatabase(newCity);
             Console.WriteLine("Antal städer tillagda: " + success);
@@ -151,6 +156,32 @@ namespace Grupp2Parking.Logic {
             return parkingSlots;
         }
 
+        public static List<ParkingHouse> GetAllParkingHouses(bool detailedView = true)
+        {
+            var sql = @$"SELECT Cities.CityName AS [Stad]
+                      {(detailedView ? ",ParkingHouses.HouseName AS [Parkeringshus]" : null) }
+                      ,SUM(CASE WHEN ElectricOutlet = 'true' THEN 1 ELSE 0 END) AS [Elplatser]
+                      ,SUM(CASE WHEN ParkingSlots.Id = Cars.ParkingSlotsId THEN 1 ELSE 0 END) AS [UpptagnaPlatser]
+                      ,COUNT(*) - SUM(CASE WHEN ParkingSlots.Id = Cars.ParkingSlotsId THEN 1 ELSE 0 END) AS [LedigaPlatser]
+                    FROM 
+                        ParkingHouses
+                    JOIN
+                        Cities ON ParkingHouses.CityId = Cities.Id
+                    JOIN
+                        ParkingSlots ON ParkingSlots.ParkingHouseId = ParkingHouses.Id
+                    LEFT JOIN
+                    Cars ON ParkingSlots.Id = cars.ParkingSlotsId
+                    GROUP BY Cities.CityName {(detailedView ? ", ParkingHouses.HouseName" : null)}
+                    ORDER BY Cities.CityName {(detailedView ? ", ParkingHouses.HouseName" : null)}";
+            var parkingHouses = new List<ParkingHouse>();
+
+            using (var connection = new SqlConnection(connString))
+            {
+                parkingHouses = connection.Query<ParkingHouse>(sql).ToList();
+            }
+            return parkingHouses;
+        }
+
         public static List<Car> GetAllCars(string condition) {
             var sql = $"SELECT * FROM Cars {condition}";
             var cars = new List<Car>();
@@ -159,6 +190,16 @@ namespace Grupp2Parking.Logic {
                 cars = connection.Query<Car>(sql).ToList();
             }
             return cars;
+        }
+
+        public static bool IsPlateInDatabase(string plate) {
+            var sql = $"SELECT * FROM Cars WHERE Cars.Plate = '{plate}'";
+            var cars = new List<Car>();
+
+            using (var connection = new SqlConnection(connString)) {
+                cars = connection.Query<Car>(sql).ToList();
+            }
+            return (cars.Count>0);
         }
 
 
@@ -217,12 +258,6 @@ namespace Grupp2Parking.Logic {
             } else {
                 Console.WriteLine("Kunde inte checka ut bil " + carId);
             }
-        }
-
-
-
-        internal static ParkingSlot GetParkingSlot() {
-            throw new NotImplementedException();
         }
 
         internal static void InsertParkingSlotsToParkingHouse(int houseId) {
