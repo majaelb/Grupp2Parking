@@ -150,16 +150,6 @@ namespace Grupp2Parking.UserInterface
         }
 
 
-        /**
-* Information om alla relevanta data rörande parkering i en stad, 
-* i.e. lista med parkeringshus, antal parkerade bilar, antal lediga platser, antalet elplatser+lediga elplatser
-* 
-*/
-        private static void PrintOverviewStatus(int cityNumber)
-        {
-            //throw new NotImplementedException();
-        }
-
         private static void PrintMenuOptions()
         {
             Console.WriteLine("Välj funktion");
@@ -179,7 +169,8 @@ namespace Grupp2Parking.UserInterface
         internal static void PrintParkingHouses(bool detailedView = true)
         {
             List<ParkingHouse> houses = ParkingLogic.GetAllParkingHouses(detailedView);
-            Console.WriteLine("Stad            \tP-hus           \tElplatser         Upptagna         Lediga");
+                        
+            Console.WriteLine($"Stad                    {(detailedView ? "P-Hus" : "")}                Elplatser         Upptagna         Lediga");
             foreach (ParkingHouse house in houses)
             {
                 Console.WriteLine($"{house.Stad}            \t{house.Parkeringshus}            \t{house.Elplatser}\t\t  {house.UpptagnaPlatser}\t\t   {house.LedigaPlatser}");
