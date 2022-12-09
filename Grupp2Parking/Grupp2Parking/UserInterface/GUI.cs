@@ -163,10 +163,12 @@ namespace Grupp2Parking.UserInterface
         {
             List<ParkingHouse> houses = ParkingLogic.GetAllParkingHouses(detailedView);
                         
-            Console.WriteLine($"Stad                    {(detailedView ? "P-Hus" : "")}                Elplatser         Upptagna         Lediga");
+            //Console.WriteLine($"Stad                  {(detailedView ? "P-Hus" : "     ")}         Elplatser       Upptagna       Lediga");
+            Console.WriteLine("{0,-20}{1,-20}{2,-15}{3,-15}{4,-15}", "Stad", (detailedView ? "P-Hus" : "     "), "Elplatser", "Upptagna", "Lediga");
             foreach (ParkingHouse house in houses)
             {
-                Console.WriteLine($"{house.Stad}            \t{house.Parkeringshus}            \t{house.Elplatser}\t\t  {house.UpptagnaPlatser}\t\t   {house.LedigaPlatser}");
+                //Console.WriteLine($"{house.Stad}            \t{house.Parkeringshus}            \t{house.Elplatser}\t\t  {house.UpptagnaPlatser}\t\t   {house.LedigaPlatser}");
+                Console.WriteLine("{0,-20}{1,-20}{2,-15}{3,-15}{4,-15}", house.Stad, house.Parkeringshus ,house.Elplatser, house.UpptagnaPlatser , house.LedigaPlatser);
             }
         }
         /**
